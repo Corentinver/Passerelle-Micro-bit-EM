@@ -1,50 +1,26 @@
 package mqtt;
 
+import java.util.UUID;
+
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.annotation.MessagingGateway;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
-import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
-import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
 
 @Configuration
 public class MqttConfig{
 
     @Bean
-    public MqttPahoClientFactory mqttClientFactory() {
-        DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setServerURIs(new String[] { "tcp://192.168.1.22:1883" });
-        //options.setUserName("username");
-        //options.setPassword("password".toCharArray());
-        factory.setConnectionOptions(options);
-        return factory;
+    public MqttClient mqttClientFactory() throws MqttException {
+    	String publisherId = UUID.randomUUID().toString();
+    	MqttClient mqttClient = new MqttClient("tcp://192.168.1.22:1883", publisherId);
+    	MqttConnectOptions options = new MqttConnectOptions();
+    	options.setAutomaticReconnect(true);
+    	options.setCleanSession(true);
+    	options.setConnectionTimeout(10);
+    	mqttClient.connect(options);
+    	return mqttClient;
     }
 
-    @Bean
-    @ServiceActivator(inputChannel = "mqttOutboundChannel")
-    public MessageHandler mqttOutbound() {
-        MqttPahoMessageHandler messageHandler =
-                       new MqttPahoMessageHandler("testClient", mqttClientFactory());
-        messageHandler.setAsync(true);
-        messageHandler.setDefaultTopic("testTopic");
-        return messageHandler;
-    }
-
-    @Bean
-    public MessageChannel mqttOutboundChannel() {
-        return new DirectChannel();
-    }
-
-    @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
-    public interface MyGateway {
-
-        void sendToMqtt(String data);
-
-    }
 }
