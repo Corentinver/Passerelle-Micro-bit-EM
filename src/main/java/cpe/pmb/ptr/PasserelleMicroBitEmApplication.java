@@ -13,6 +13,7 @@ import org.springframework.messaging.MessageChannel;
 @SpringBootApplication
 @ComponentScan(basePackages= {"mqtt"})
 public class PasserelleMicroBitEmApplication {
+	
 	@Autowired
 	public MqttClient mqttClient;
 	
@@ -27,8 +28,8 @@ public class PasserelleMicroBitEmApplication {
             while (true) {
                 try {
                     Thread.sleep(3*1000); // Each 3 sec. FOR TEEEEEEST.
-                    System.out.println("envoi d'un message");
-                    mqttClient.publish("lyon/mairie", new MqttMessage("22".getBytes()));
+                    //System.out.println("envoi d'un message");
+                    //mqttClient.publish("lyon/mairie", new MqttMessage("22".getBytes()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

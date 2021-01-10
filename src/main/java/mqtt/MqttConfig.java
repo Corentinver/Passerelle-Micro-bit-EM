@@ -19,7 +19,7 @@ public class MqttConfig{
     	options.setAutomaticReconnect(true);
     	options.setCleanSession(true);
     	options.setConnectionTimeout(10);
-    	mqttClient.connect(options);
+    	//mqttClient.connect(options);
     	return mqttClient;
     }
 
