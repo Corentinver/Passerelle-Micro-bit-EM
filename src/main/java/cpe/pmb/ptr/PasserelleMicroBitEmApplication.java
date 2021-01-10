@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.messaging.MessageChannel;
 
 @SpringBootApplication
-@ComponentScan(basePackages= {"mqtt"})
+@ComponentScan(basePackages= {"mqtt", "uart"})
 public class PasserelleMicroBitEmApplication {
 	
 	@Autowired
