@@ -45,7 +45,7 @@ public class PasserelleMicroBitEmApplication {
 			DataInputStream ins = new DataInputStream(serial.getInputStream());
 			DataOutputStream outs = new DataOutputStream(serial.getOutputStream());
         	try{
-        		//while(ins.available()==0 && !Thread.interrupted());// wait for a byte
+        		while(ins.available()==0 && !Thread.interrupted());// wait for a byte
         		while(!Thread.interrupted()) {// read all bytes
         			if(ins.available()>0) {
         				char b = (char) ins.read();
