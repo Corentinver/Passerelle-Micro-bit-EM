@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dto.FireDTO;
@@ -18,7 +19,11 @@ public class PasserelleService {
 	@Autowired
 	public RestTemplate restTemplate;
 	
+	@Autowired
+	public ObjectMapper objectMapper;
+	
 	public void newFire(FireDTO fire) {
+		System.out.println("new");
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -32,6 +37,7 @@ public class PasserelleService {
 	}
 
 	public void updateFire(FireDTO fire) {
+		System.out.println("update");
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 	    ObjectMapper objectMapper = new ObjectMapper();
@@ -44,4 +50,18 @@ public class PasserelleService {
 		}
 	}
 	
+	
+	public void buildObjectFire(String fire) throws JsonMappingException, JsonProcessingException {
+		System.out.println(fire);
+		String jsonFire = fire.substring(fire.lastIndexOf("$") + 1, fire.lastIndexOf("%"));
+		System.out.println(jsonFire);
+		FireDTO fireDTO = objectMapper.readValue(jsonFire, FireDTO.class);	
+
+		if (fire.startsWith("b'new$")) {
+			this.newFire(fireDTO);
+		} else if (fire.startsWith("b'update$")) {
+			this.updateFire(fireDTO);
+		}
+	}
+
 }
