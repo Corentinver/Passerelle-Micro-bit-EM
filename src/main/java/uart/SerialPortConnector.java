@@ -3,7 +3,7 @@ package uart;
 import org.springframework.stereotype.Component;
 
 
-@Component
+
 public class SerialPortConnector extends AbstractImplSerialPort  {
 
 	@Override
