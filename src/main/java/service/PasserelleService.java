@@ -1,5 +1,11 @@
 package service;
 
+import java.math.BigInteger;
+
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +27,9 @@ public class PasserelleService {
 	
 	@Autowired
 	public ObjectMapper objectMapper;
+	
+	@Autowired
+	public MqttClient mqttClient;
 	
 	public void newFire(FireDTO fire) {
 		System.out.println("new");
@@ -51,7 +60,7 @@ public class PasserelleService {
 	}
 	
 	
-	public void buildObjectFire(String fire) throws JsonMappingException, JsonProcessingException {
+	public void buildObjectFire(String fire) throws JsonMappingException, JsonProcessingException, MqttPersistenceException, MqttException {
 		System.out.println(fire);
 		String jsonFire = fire.substring(fire.lastIndexOf("$") + 1, fire.lastIndexOf("%"));
 		System.out.println(jsonFire);
@@ -59,9 +68,14 @@ public class PasserelleService {
 
 		if (fire.startsWith("b'new$")) {
 			this.newFire(fireDTO);
+			return;
 		} else if (fire.startsWith("b'update$")) {
 			this.updateFire(fireDTO);
+			return;
 		}
+		MqttMessage message = new MqttMessage();
+		message.setPayload(BigInteger.valueOf(fireDTO.getIntensity()).toByteArray());
+		mqttClient.publish(fireDTO.getLocation().getLatitude() + ";" + fireDTO.getLocation().getLongitude(), message);
 	}
 
 }
