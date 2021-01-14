@@ -30,7 +30,7 @@ public class PasserelleService {
 		HttpEntity<String> request;
 		try {
 			request = new HttpEntity<String>(objectMapper.writeValueAsString(fire), headers);
-			restTemplate.postForEntity("http://localhost:8082/newFire", request, FireDTO.class);
+			restTemplate.postForEntity("http://localhost:8082/newFirePasserelle", request, FireDTO.class);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +44,7 @@ public class PasserelleService {
 		HttpEntity<String> request;
 		try {
 			request = new HttpEntity<String>(objectMapper.writeValueAsString(fire), headers);
-			restTemplate.postForEntity("http://localhost:8082/updateFire", request, FireDTO.class);
+			restTemplate.postForEntity("http://localhost:8082/updateFirePasserelle", request, FireDTO.class);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
