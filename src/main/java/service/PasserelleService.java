@@ -75,7 +75,7 @@ public class PasserelleService {
 		}
 		MqttMessage message = new MqttMessage();
 		message.setPayload(BigInteger.valueOf(fireDTO.getIntensity()).toByteArray());
-		mqttClient.publish(fireDTO.getLocation().getLatitude() + ";" + fireDTO.getLocation().getLongitude(), message);
+		mqttClient.publish("lyon/" + fireDTO.getLocation().getLatitude() + ";" + fireDTO.getLocation().getLongitude(), message);
 	}
 
 }
